@@ -14,5 +14,5 @@ local opt = {
 }
 local map = vim.keymap.set
 
-map("n", "sp", ":split<CR>", opt)
-map("n", "vsp", ":vsplit<CR>", opt)
+map("n", "sp", ":split<cr>", opt)
+map("n", "vsp", ":vsplit<cr>", opt)
