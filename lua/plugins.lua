@@ -153,15 +153,108 @@ require("lazy").setup({
     'tpope/vim-rhubarb',
   },
 
+  -- file manager
   {
     keys = {
-      { "nt", ":NERDTreeToggle<cr>", desc = "toggle nerdtree" },
-      { "<leader>n", ":NERDTree<cr>", desc = "nerdtree" },
-      { "nf", ":NERDTreeFind<cr>", desc = "nerdtree find" },
-      { "nfc", ":NERDTreeFocus<cr>", desc = "nerdtree focus" },
+      { "nt",        ":NERDTreeToggle<cr>", desc = "toggle nerdtree" },
+      { "<leader>n", ":NERDTree<cr>",       desc = "nerdtree" },
+      { "nf",        ":NERDTreeFind<cr>",   desc = "nerdtree find" },
+      { "nfc",       ":NERDTreeFocus<cr>",  desc = "nerdtree focus" },
     },
     'preservim/nerdtree',
   },
+
+  -- treesitter
+  {
+    'nvim-treesitter/nvim-treesitter',
+    config = function()
+      require('nvim-treesitter.configs').setup({
+        highlight = { enable = true, },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "gnn", -- set to `false` to disable one of the mappings
+            node_incremental = "grn",
+            scope_incremental = "grc",
+            node_decremental = "grm",
+          },
+        },
+      })
+    end
+  },
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require 'nvim-treesitter.configs'.setup {
+        textobjects = {
+          swap = {
+            enable = true,
+            swap_next = {
+              ["rp"] = "@parameter.inner",
+            },
+            swap_previous = {
+              ["rP"] = "@parameter.inner",
+            },
+          },
+          select = {
+            enable = true,
+
+            -- Automatically jump forward to textobj, similar to targets.vim
+            lookahead = true,
+
+            keymaps = {
+              -- You can use the capture groups defined in textobjects.scm
+              ["af"] = "@function.outer",
+              ["if"] = "@function.inner",
+              ["aa"] = "@parameter.outer",
+              ["ia"] = "@parameter.inner",
+              ["ac"] = "@class.outer",
+              -- You can optionally set descriptions to the mappings (used in the desc parameter of
+              -- nvim_buf_set_keymap) which plugins like which-key display
+              ["ric"] = { query = "@class.inner", desc = "Select inner part of a class region" },
+              -- You can also use captures from other query groups like `locals.scm`
+              ["ras"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
+            },
+            -- You can choose the select mode (default is charwise 'v')
+            --
+            -- Can also be a function which gets passed a table with the keys
+            -- * query_string: eg '@function.inner'
+            -- * method: eg 'v' or 'o'
+            -- and should return the mode ('v', 'V', or '<c-v>') or a table
+            -- mapping query_strings to modes.
+            selection_modes = {
+              ['@parameter.outer'] = 'v', -- charwise
+              ['@function.outer'] = 'V',  -- linewise
+              ['@class.outer'] = '<c-v>', -- blockwise
+            },
+            -- If you set this to `true` (default is `false`) then any textobject is
+            -- extended to include preceding or succeeding whitespace. Succeeding
+            -- whitespace has priority in order to act similarly to eg the built-in
+            -- `ap`.
+            --
+            -- Can also be a function which gets passed a table with the keys
+            -- * query_string: eg '@function.inner'
+            -- * selection_mode: eg 'v'
+            -- and should return true of false
+            include_surrounding_whitespace = true,
+          },
+        },
+      }
+    end
+  },
+
+  -- debug support
+  {
+    'mfussenegger/nvim-dap',
+  },
+  {
+    'rcarriga/nvim-dap-ui',
+    config = function()
+      require("dapui").setup()
+    end
+  },
+
 
 })
 
@@ -366,3 +459,80 @@ require('lspconfig').lua_ls.setup {
     return true
   end
 }
+
+-- debugpy set up
+local dap = require('dap')
+dap.adapters.python = function(cb, config)
+  if config.request == 'attach' then
+    ---@diagnostic disable-next-line: undefined-field
+    local port = (config.connect or config).port
+    ---@diagnostic disable-next-line: undefined-field
+    local host = (config.connect or config).host or '127.0.0.1'
+    cb({
+      type = 'server',
+      port = assert(port, '`connect.port` is required for a python `attach` configuration'),
+      host = host,
+      options = {
+        source_filetype = 'python',
+      },
+    })
+  else
+    cb({
+      type = 'executable',
+      --command = '~/.virtualenvs/debugpy/Scripts/python.exe',
+      command = 'E:/veighna_studio/python.exe',
+      args = { '-m', 'debugpy.adapter' },
+      options = {
+        source_filetype = 'python',
+      },
+    })
+  end
+end
+
+dap.configurations.python = {
+  {
+    type = 'python',
+    request = 'launch',
+    name = "Launch file",
+    program = "${file}",
+    pythonPath = function()
+      -- return '~/.virtualenvs/debugpy/Scripts/python.exe'
+      return 'E:/veighna_studio/python.exe'
+    end,
+  },
+  {
+    -- debugpy will listen port 5678
+    -- just execute your server like that: python -m debugpy --listen localhost:5678 myfile.py
+    type = "python",
+    request = "attach",
+    name = "Attach remote",
+    connect = function()
+      local host = vim.fn.input("Host [127.0.0.1]: ")
+      host = host ~= "" and host or "127.0.0.1"
+      local port = tonumber(vim.fn.input("Port [5678]: ")) or 5678
+      return { host = host, port = port }
+    end,
+  },
+}
+
+local dapui = require("dapui")
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
+vim.keymap.set("n", '<leader>cl', function() require('dapui').close() end)
+
+vim.keymap.set("n", '<leader>g', function() require('dap').continue() end)
+vim.keymap.set("n", '<leader>l', function() require('dap').run_last() end)
+vim.keymap.set("n", '<leader>bp', function() require('dap').toggle_breakpoint() end)
+vim.keymap.set("n", '<leader>p', function() require 'dap'.step_over() end)
+vim.keymap.set("n", '<leader>t', function() require 'dap'.step_into() end)
+vim.keymap.set("n", '<leader>u', function() require 'dap'.step_out() end)
+vim.keymap.set("n", '<leader>c', function() require 'dap'.close() end)
+vim.keymap.set("n", '<leader>o', function() require 'dap'.repl.open() end)
+vim.keymap.set("n", '<leader>q', function() require 'dap'.disconnect() end, { noremap = true, silent = true })
