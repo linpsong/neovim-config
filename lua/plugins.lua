@@ -139,7 +139,7 @@ require("lazy").setup({
       vim.cmd.cnoreabbrev([[gp Git push]])
     end
   },
-  --[[
+  --[[ don't work on Windows
   {
     event = "VeryLazy",
     'lewis6991/gitsigns.nvim',
@@ -148,9 +148,19 @@ require("lazy").setup({
     end
   },
   --]]
-  {
+  { -- usage: select the code and the GBrowse
     event = "VeryLazy",
     'tpope/vim-rhubarb',
+  },
+
+  {
+    keys = {
+      { "nt", ":NERDTreeToggle<cr>", desc = "toggle nerdtree" },
+      { "<leader>n", ":NERDTree<cr>", desc = "nerdtree" },
+      { "nf", ":NERDTreeFind<cr>", desc = "nerdtree find" },
+      { "nfc", ":NERDTreeFocus<cr>", desc = "nerdtree focus" },
+    },
+    'preservim/nerdtree',
   },
 
 })
