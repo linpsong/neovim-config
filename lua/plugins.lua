@@ -129,6 +129,11 @@ require("lazy").setup({
     opts = {} -- this is equalent to setup({}) function
   },
 
+  {
+    cmd = "Git",
+    'tpope/vim-fugitive',
+  }
+
 })
 
 -- Setup language servers.
