@@ -9,7 +9,7 @@ set.softtabstop = 2
 set.shiftwidth = 2
 set.expandtab = true
 
-set.relativenumber = true
+-- set.relativenumber = true
 
 set.clipboard = "unnamed" -- 剪切板
 

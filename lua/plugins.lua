@@ -41,53 +41,31 @@ require("lazy").setup({
     dependencies = { 'nvim-lua/plenary.nvim' }
   },
 
+  --[[
   -- neovim lspconfig
   {
     --event = "VeryLazy",
     'neovim/nvim-lspconfig',
+    dependencies = { "williamboman/mason-lspconfig.nvim" },
 
-    -- Setup language servers.
-    config = function()
-      -- Global mappings.
-      -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-      vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
-      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-      vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-      vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+  },
+  --]]
 
-      -- Use LspAttach autocommand to only map the following keys
-      -- after the language server attaches to the current buffer
-      vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-        callback = function(ev)
-          -- Enable completion triggered by <c-x><c-o>
-          vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-
-          -- Buffer local mappings.
-          -- See `:help vim.lsp.*` for documentation on any of the below functions
-          local opts = { buffer = ev.buf }
-          vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-          vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-          vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-          vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-          vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-          vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-          vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
-          vim.keymap.set('n', '<space>wl', function()
-            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-          end, opts)
-          vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-          vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-          vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
-          vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-          vim.keymap.set('n', '<space>f', function()
-            vim.lsp.buf.format { async = true }
-          end, opts)
-        end,
-      })
-    end
+  -- mason
+  {
+    event = "VeryLazy",
+    "williamboman/mason.nvim",
+    build = ":MasonUpdate", -- :MasonUpdate updates registry contents
   },
 
+  -- neovim-lspconfig
+  {
+    event = "VeryLazy",
+    "neovim/nvim-lspconfig",
+    dependencies = { "williamboman/mason-lspconfig.nvim" },
+  },
+
+  -- nvim-cmp: code completion
   {
     event = "VeryLazy",
     'hrsh7th/nvim-cmp',
@@ -99,7 +77,45 @@ require("lazy").setup({
       'hrsh7th/cmp-cmdline',
       'hrsh7th/nvim-cmp',
       'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip'
     }
+  },
+
+  { "folke/neodev.nvim", opts = {} },
+
+  {
+    event = "VeryLazy",
+    'jose-elias-alvarez/null-ls.nvim',
+
+    config = function()
+      local null_ls = require("null-ls")
+      local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.stylua,
+          null_ls.builtins.formatting.black,
+          null_ls.builtins.diagnostics.eslint,
+          null_ls.builtins.completion.spell,
+        },
+        -- you can reuse a shared lspconfig on_attach callback here
+        on_attach = function(client, bufnr)
+          if client.supports_method("textDocument/formatting") then
+            vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              group = augroup,
+              buffer = bufnr,
+              callback = function()
+                -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+                -- on later neovim version, you should use vim.lsp.buf.format({ async = false }) instead
+                -- vim.lsp.buf.formatting_sync()
+                vim.lsp.buf.format({ async = false })
+              end,
+            })
+          end
+        end
+      })
+    end
   },
 
   -- lspsaga: more friendly Hint UI
@@ -107,18 +123,87 @@ require("lazy").setup({
   --  'nvimdev/lspsaga.nvim'
   --},
 
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    opts = {} -- this is equalent to setup({}) function
+  },
+
 })
 
+-- Setup language servers.
+--
+-- Global mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<space>f', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})
+
+-- IMPORTANT: make sure to setup neodev BEFORE lspconfig
+require("neodev").setup({
+  -- add any options here, or leave empty to use the default settings
+})
+
+-- setup lspconfig
+require("mason").setup()
+require("mason-lspconfig").setup()
 
 -- Set up nvim-cmp.
 local cmp = require 'cmp'
+
+-- If you want insert `(` after select function or method item
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
+
+local has_words_before = function()
+  unpack = unpack or table.unpack
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local luasnip = require("luasnip")
 
 cmp.setup({
   snippet = {
     -- REQUIRED - you must specify a snippet engine
     expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-      -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+      -- vim.fn["vsnip#anonymous"](args.body)   -- For `vsnip` users.
+      require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
       -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
       -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
     end,
@@ -128,6 +213,29 @@ cmp.setup({
     -- documentation = cmp.config.window.bordered(),
   },
   mapping = cmp.mapping.preset.insert({
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+        -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+        -- they way you will only jump inside the snippet region
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
@@ -136,8 +244,8 @@ cmp.setup({
   }),
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    { name = 'vsnip' }, -- For vsnip users.
-    -- { name = 'luasnip' }, -- For luasnip users.
+    -- { name = 'vsnip' },   -- For vsnip users.
+    { name = 'luasnip' }, -- For luasnip users.
     -- { name = 'ultisnips' }, -- For ultisnips users.
     -- { name = 'snippy' }, -- For snippy users.
   }, {
@@ -172,21 +280,55 @@ cmp.setup.cmdline(':', {
   })
 })
 
-local lspconfig = require('lspconfig')
+-- Set up lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
--- python config
-lspconfig.pyright.setup {
+
+-- set up python lsp
+require('lspconfig').pyright.setup {
   capabilities = capabilities,
 }
 
--- lua config
-lspconfig.lua_ls.setup {
-  settings = {
-    Lua = {
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = { 'vim' },
-      },
-    },
-  },
+-- set up lua lsp
+require('lspconfig').lua_ls.setup {
+  capabilities = capabilities,
+
+  on_init = function(client)
+    local path = client.workspace_folders[1].name
+    if not vim.loop.fs_stat(path .. '/.luarc.json') and not vim.loop.fs_stat(path .. '/.luarc.jsonc') then
+      client.config.settings = vim.tbl_deep_extend('force', client.config.settings, {
+        Lua = {
+          runtime = {
+            -- Tell the language server which version of Lua you're using
+            -- (most likely LuaJIT in the case of Neovim)
+            version = 'LuaJIT'
+          },
+          diagnostics = {
+            -- Get the language server to recognize the `vim` global
+            globals = { 'vim' },
+          },
+          -- Make the server aware of Neovim runtime files
+          workspace = {
+            checkThirdParty = false,
+            library = {
+              vim.env.VIMRUNTIME
+              -- "${3rd}/luv/library"
+              -- "${3rd}/busted/library",
+            }
+            -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
+            -- library = vim.api.nvim_get_runtime_file("", true)
+          },
+          completion = {
+            callSnippet = "Replace",
+          },
+          -- Do not send telemetry data containing a randomized but unique identifier
+          telemetry = {
+            enable = false,
+          },
+        }
+      })
+
+      client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+    end
+    return true
+  end
 }
