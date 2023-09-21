@@ -130,9 +130,23 @@ require("lazy").setup({
   },
 
   {
-    cmd = "Git",
+    -- cmd = "Git",
+    event = "VeryLazy",
     'tpope/vim-fugitive',
+    config = function()
+      -- convert `Git` to 'git' in the command line
+      vim.cmd.cnoreabbrev([[git Git]])
+    end
+  },
+  --[[
+  {
+    event = "VeryLazy",
+    'lewis6991/gitsigns.nvim',
+    config = function()
+      require('gitsigns').setup()
+    end
   }
+  --]]
 
 })
 
