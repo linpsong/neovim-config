@@ -410,6 +410,16 @@ cmp.setup.cmdline(':', {
 -- Set up lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
+local cmp_nvim_lsp = require "cmp_nvim_lsp"
+require 'lspconfig'.clangd.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  cmd = {
+    "clangd",
+    "--offset-encoding=utf-16",
+  },
+}
+
 -- set up python lsp
 require('lspconfig').pyright.setup {
   capabilities = capabilities,
