@@ -1,4 +1,3 @@
--- lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -21,10 +20,25 @@ require("lazy").setup({
   {
     'ellisonleao/gruvbox.nvim',
     requires = 'rktjmp/lush.nvim',
-
+    --config = function()
+    --  vim.cmd.set("background=dark")
+    --  vim.cmd.colorscheme("gruvbox")
+    --end
+  },
+  {
+    'sainnhe/gruvbox-material',
+    requires = 'rktjmp/lush.nvim',
     config = function()
-      vim.cmd.colorscheme("gruvbox")
+      vim.cmd.set("background=dark")
+      vim.cmd.colorscheme("gruvbox-material")
     end
+  },
+  {
+    'sainnhe/everforest',
+    requires = 'rktjmp/lush.nvim',
+    -- config = function()
+    --   vim.cmd.colorscheme("everforest")
+    -- end
   },
 
   -- telescope
@@ -94,6 +108,10 @@ require("lazy").setup({
       null_ls.setup({
         sources = {
           --null_ls.builtins.formatting.stylua,
+          --null_ls.builtins.formatting.asmfmt,
+          null_ls.builtins.formatting.prettier.with({
+            filetypes = { "html", "json", "yaml", "markdown", "vue" },
+          }),
           null_ls.builtins.formatting.black,
           null_ls.builtins.formatting.clang_format,
           null_ls.builtins.formatting.cmake_format,
@@ -171,6 +189,7 @@ require("lazy").setup({
     'nvim-treesitter/nvim-treesitter',
     config = function()
       require('nvim-treesitter.configs').setup({
+        --ensure_installed = { "cpp", "cmake", "lua", "nasm"},
         highlight = { enable = true, },
         incremental_selection = {
           enable = true,
@@ -421,6 +440,13 @@ require 'lspconfig'.clangd.setup {
     "--offset-encoding=utf-16",
   },
 }
+
+--local util = require 'lspconfig.util'
+--require 'lspconfig'.asm_lsp.setup {
+--  cmd = { 'asm-lsp' },
+--  filetypes = { 'asm', 'vmasm' },
+--  root_dir = util.find_git_ancestor,
+--}
 
 -- set up python lsp
 require('lspconfig').pyright.setup {
