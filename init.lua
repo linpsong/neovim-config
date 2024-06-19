@@ -1,11 +1,12 @@
 -- basic
-require("basic")
+require("user.basic")
 
 -- shell
-require("shell")
+require("user.shell")
 
 -- keybindings
-require("keybindings")
+require("user.keybindings")
 
 -- plugins
-require("plugins")
+require('user.plugins')
+
