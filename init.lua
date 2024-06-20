@@ -1,6 +1,9 @@
 -- basic
 require("user.basic")
 
+-- filetype
+require("user.filetype")
+
 -- shell
 require("user.shell")
 
