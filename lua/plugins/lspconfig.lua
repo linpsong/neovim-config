@@ -81,7 +81,7 @@ function Plugin.config()
       end,
       ['clangd'] = function()
         require('plugins.lsp.clangd')
-      end
+      end,
     }
   })
 end
