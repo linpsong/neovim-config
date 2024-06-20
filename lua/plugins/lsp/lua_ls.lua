@@ -4,8 +4,6 @@ local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 
-print(runtime_path)
-
 require("lspconfig").lua_ls.setup({
 	capabilities = lsp_capabilities,
 	settings = {

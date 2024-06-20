@@ -77,6 +77,9 @@ function Plugin.config()
 			["clangd"] = function()
 				require("plugins.lsp.clangd")
 			end,
+			["glsl_analyzer"] = function()
+				require("plugins.lsp.glsl_analyzer")
+			end,
 		},
 	})
 end

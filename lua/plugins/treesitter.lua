@@ -1,3 +1,8 @@
+vim.cmd([[
+  autocmd BufRead,BufNewFile *.vs set filetype=glsl
+  autocmd BufRead,BufNewFile *.fs set filetype=glsl
+]])
+
 local Plugin = { "nvim-treesitter/nvim-treesitter" }
 
 Plugin.main = "nvim-treesitter.configs"
