@@ -8,5 +8,4 @@ require("user.shell")
 require("user.keybindings")
 
 -- plugins
-require('user.plugins')
-
+require("user.plugins")

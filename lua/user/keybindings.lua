@@ -19,5 +19,5 @@ map("n", "sp", ":split<cr>", opt)
 map("n", "vsp", ":vsplit<cr>", opt)
 
 -- nvim-tree
-map('n', 'nt', ':NvimTreeOpen<CR>')
-map('n', 'nq', ':NvimTreeClose<CR>')
+map("n", "nt", ":NvimTreeOpen<CR>")
+map("n", "nq", ":NvimTreeClose<CR>")
