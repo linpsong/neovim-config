@@ -74,6 +74,14 @@ function Plugin.config()
 				-- load the config from lua/plugins/lsp/lua_ls.lua
 				require("plugins.lsp.lua_ls")
 			end,
+			--[[
+			["pyright"] = function()
+				require("plugins.lsp.pyright")
+			end,
+      --]]
+			["pylsp"] = function()
+				require("plugins.lsp.pylsp")
+			end,
 			["clangd"] = function()
 				require("plugins.lsp.clangd")
 			end,
