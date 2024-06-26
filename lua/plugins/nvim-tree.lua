@@ -50,7 +50,7 @@ function Plugin.config()
 		},
 
 		view = {
-			width = 30,
+			width = 36,
 			side = "left",
 			number = false,
 			relativenumber = false,
