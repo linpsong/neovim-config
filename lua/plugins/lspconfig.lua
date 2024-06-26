@@ -88,6 +88,9 @@ function Plugin.config()
 			["glsl_analyzer"] = function()
 				require("plugins.lsp.glsl_analyzer")
 			end,
+			["hls"] = function()
+				require("plugins.lsp.haskell_language_server")
+			end,
 		},
 	})
 end

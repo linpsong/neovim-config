@@ -21,6 +21,7 @@ function Plugin.config()
 			null_ls.builtins.formatting.cmake_format,
 			--null_ls.builtins.diagnostics.eslint,
 			--null_ls.builtins.completion.spell,
+			null_ls.builtins.formatting.fourmolu,
 		},
 
 		-- you can reuse a shared lspconfig on_attach callback here

@@ -2,6 +2,8 @@ local Plugin = { "nvim-treesitter/nvim-treesitter" }
 
 Plugin.main = "nvim-treesitter.configs"
 
+-- Plugin.event = "VeryLazy"
+
 Plugin.dependencies = {
 	{ "nvim-treesitter/nvim-treesitter-textobjects" },
 }
