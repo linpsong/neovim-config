@@ -78,10 +78,12 @@ function Plugin.config()
 			["pyright"] = function()
 				require("plugins.lsp.pyright")
 			end,
-      --]]
+			--]]
+			--[[ --]]
 			["pylsp"] = function()
 				require("plugins.lsp.pylsp")
 			end,
+			--[[ --]]
 			["clangd"] = function()
 				require("plugins.lsp.clangd")
 			end,
