@@ -93,6 +93,9 @@ function Plugin.config()
 			["hls"] = function()
 				require("plugins.lsp.haskell_language_server")
 			end,
+			["powershell_es"] = function()
+				require("plugins.lsp.powershell_es")
+			end,
 		},
 	})
 
