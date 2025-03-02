@@ -93,6 +93,9 @@ function Plugin.config()
 			["hls"] = function()
 				require("plugins.lsp.haskell_language_server")
 			end,
+			["gopls"] = function()
+				require("plugins.lsp.gopls")
+			end,
 		},
 	})
 
