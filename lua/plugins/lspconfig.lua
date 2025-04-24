@@ -61,6 +61,10 @@ function Plugin.config()
 
 	-- See :help mason-lspconfig-settings
 	require("mason-lspconfig").setup({
+    ensure_installed = {
+      'bufls',
+      -- others
+    },
 		handlers = {
 			-- See :help mason-lspconfig-dynamic-server-setup
 			function(server)
@@ -96,6 +100,12 @@ function Plugin.config()
 			["powershell_es"] = function()
 				require("plugins.lsp.powershell_es")
 			end,
+			["gopls"] = function()
+				require("plugins.lsp.gopls")
+			end,
+      ["bufls"] = function()
+        require("plugins.lsp.buf_ls")
+      end,
 		},
 	})
 
