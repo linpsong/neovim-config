@@ -27,6 +27,8 @@ function Plugin.config()
 			null_ls.builtins.formatting.fourmolu, 
       null_ls.builtins.diagnostics.golangci_lint, 
       null_ls.builtins.formatting.gofmt,
+      -- null_ls.builtins.diagnostics.buf, 
+      null_ls.builtins.formatting.buf,
 		},
 
 		-- you can reuse a shared lspconfig on_attach callback here
