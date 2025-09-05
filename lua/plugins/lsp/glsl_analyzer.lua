@@ -1,1 +1,5 @@
-require("lspconfig").glsl_analyzer.setup({})
+return {
+	cmd = { "glsl_analyzer" },
+	filetypes = { "glsl" },
+	root_markers = { ".git" },
+}

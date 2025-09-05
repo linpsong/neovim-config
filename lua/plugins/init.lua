@@ -31,7 +31,21 @@ local Plugin = {
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		opts = {}, -- this is equalent to setup({}) function
-	}, 
+	},
 }
+
+vim.lsp.enable({
+	-- lua
+	"luals",
+
+	-- c/c++
+	"clangd",
+
+	-- glsl
+	"glsl_analyzer",
+
+	-- python
+	"pyright",
+})
 
 return Plugin

@@ -1,6 +1,6 @@
 local Plugin = {
 	event = "VeryLazy",
-	"jose-elias-alvarez/null-ls.nvim",
+	"nvimtools/none-ls.nvim",
 }
 
 function Plugin.config()
@@ -11,9 +11,9 @@ function Plugin.config()
 		sources = {
 			null_ls.builtins.formatting.stylua,
 			--null_ls.builtins.formatting.asmfmt,
-			null_ls.builtins.formatting.prettier.with({
-				filetypes = { "html", "json", "yaml", "markdown", "vue" },
-			}),
+			-- null_ls.builtins.formatting.prettier.with({
+			-- 	filetypes = { "html", "json", "yaml", "markdown", "vue" },
+			-- }),
 			null_ls.builtins.formatting.black,
 			null_ls.builtins.formatting.clang_format.with({
 				filetypes = { "cpp", "cc", "h", "hpp", "hh", "c", "glsl" },
@@ -24,16 +24,16 @@ function Plugin.config()
 			null_ls.builtins.formatting.cmake_format,
 			--null_ls.builtins.diagnostics.eslint,
 			--null_ls.builtins.completion.spell,
-			null_ls.builtins.formatting.fourmolu, 
-      null_ls.builtins.diagnostics.golangci_lint, 
-      null_ls.builtins.formatting.gofmt,
-      -- null_ls.builtins.diagnostics.buf, 
-      null_ls.builtins.formatting.buf,
+			-- null_ls.builtins.formatting.fourmolu,
+			-- null_ls.builtins.diagnostics.golangci_lint,
+			-- null_ls.builtins.formatting.gofmt,
+			-- null_ls.builtins.diagnostics.buf,
+			-- null_ls.builtins.formatting.buf,
 		},
 
 		-- you can reuse a shared lspconfig on_attach callback here
 		on_attach = function(client, bufnr)
-			if client.supports_method("textDocument/formatting") then
+			if client:supports_method("textDocument/formatting") then
 				vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
 				vim.api.nvim_create_autocmd("BufWritePre", {
 					group = augroup,

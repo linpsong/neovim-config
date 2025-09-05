@@ -1,3 +1,5 @@
-require("lspconfig").pyright.setup({
-	capabilities = require("cmp_nvim_lsp").default_capabilities(),
-})
+return {
+	cmd = { "pyright" },
+	filetypes = { "py" },
+	root_markers = { ".git", "pyproject.toml" },
+}
