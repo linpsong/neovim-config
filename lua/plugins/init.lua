@@ -34,18 +34,4 @@ local Plugin = {
 	},
 }
 
-vim.lsp.enable({
-	-- lua
-	"luals",
-
-	-- c/c++
-	"clangd",
-
-	-- glsl
-	"glsl_analyzer",
-
-	-- python
-	"pyright",
-})
-
 return Plugin
