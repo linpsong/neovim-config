@@ -29,6 +29,9 @@ vim.lsp.enable({
 	-- lua
 	"luals",
 
+	-- nix
+	"nixd",
+
 	-- c/c++
 	"clangd",
 

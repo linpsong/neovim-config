@@ -29,6 +29,7 @@ function Plugin.config()
 			-- null_ls.builtins.formatting.gofmt,
 			-- null_ls.builtins.diagnostics.buf,
 			-- null_ls.builtins.formatting.buf,
+			null_ls.builtins.formatting.nixfmt,
 		},
 
 		-- you can reuse a shared lspconfig on_attach callback here
