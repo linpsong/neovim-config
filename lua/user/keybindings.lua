@@ -23,6 +23,8 @@ map("n", "vsp", ":vsplit<cr>", opt)
 map("n", "nt", ":NvimTreeOpen<CR>")
 map("n", "nq", ":NvimTreeClose<CR>")
 
+map("n", "gl", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+
 map("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to Definition" })
 map("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "Go to Declaration" })
 map("n", "ga", vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code Actions" })
