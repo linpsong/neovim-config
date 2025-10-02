@@ -14,18 +14,10 @@ require("user.keybindings")
 require("user.plugins")
 
 -- Defined in init.lua
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 vim.lsp.config("*", {
-	capabilities = {
-		textDocument = {
-			semanticTokens = {
-				multilineTokenSupport = true,
-			},
-			completion = {
-				editsNearCursor = true,
-			},
-		},
-		offsetEncoding = "utf-16",
-	},
+	capabilities = capabilities,
 	root_markers = { ".git" },
 })
 
