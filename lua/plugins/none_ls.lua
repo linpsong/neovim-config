@@ -18,7 +18,7 @@ function Plugin.config()
 			null_ls.builtins.formatting.clang_format.with({
 				filetypes = { "cpp", "cc", "h", "hpp", "hh", "c", "glsl" },
 				extra_args = {
-					"-style={BasedOnStyle: Microsoft, IndentWidth: 4}",
+					"--style={BasedOnStyle: Microsoft, IndentWidth: 4}",
 				},
 			}),
 			null_ls.builtins.formatting.cmake_format,
@@ -46,27 +46,19 @@ function Plugin.config()
 					group = augroup,
 					buffer = bufnr,
 					callback = function()
-						-- get current cursor position
-						local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-
 						-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
 						-- on later neovim version, you should use vim.lsp.buf.format({ async = false }) instead
 						-- vim.lsp.buf.formatting_sync()
-						vim.lsp.buf.format({ async = false, timeout_ms = 5000 })
-
-						-- get the line count after formatting
-						local lines = vim.api.nvim_buf_line_count(0)
-						if row > lines then
-							row, col = lines, 0
-						else
-							-- get current line after formatting
-							local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ""
-							-- find first word
-							local s, e = line:find("%w+")
-							col = s and (s - 1) or 0
-						end
-						-- set cursor positon
-						vim.api.nvim_win_set_cursor(0, { row, col })
+						vim.lsp.buf.format({
+							async = false,
+							timeout_ms = 5000,
+							-- fix a issue that null-ls’s extra_args not applying consistently.
+							-- sometimes default rules apply but not extra_args rules when we do not open
+							-- the target filetype first (maybe we open a .txt and the a .cpp by telescope),
+							filter = function(client)
+								return client.name == "null-ls"
+							end,
+						})
 					end,
 				})
 			end
