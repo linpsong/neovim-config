@@ -30,6 +30,8 @@ function Plugin.config()
 			-- null_ls.builtins.diagnostics.buf,
 			-- null_ls.builtins.formatting.buf,
 			null_ls.builtins.formatting.nixfmt,
+			null_ls.builtins.diagnostics.verilator,
+			null_ls.builtins.formatting.verible_verilog_format,
 		},
 
 		--[[
