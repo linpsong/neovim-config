@@ -36,4 +36,7 @@ vim.lsp.enable({
 
 	-- python
 	"pyright",
+
+	-- typescript/javascript
+	"ts_ls",
 })

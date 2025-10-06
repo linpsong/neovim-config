@@ -11,9 +11,6 @@ function Plugin.config()
 		sources = {
 			null_ls.builtins.formatting.stylua,
 			--null_ls.builtins.formatting.asmfmt,
-			-- null_ls.builtins.formatting.prettier.with({
-			-- 	filetypes = { "html", "json", "yaml", "markdown", "vue" },
-			-- }),
 			null_ls.builtins.formatting.black,
 			null_ls.builtins.formatting.clang_format.with({
 				filetypes = { "cpp", "cc", "h", "hpp", "hh", "c", "glsl" },
@@ -22,6 +19,10 @@ function Plugin.config()
 				},
 			}),
 			null_ls.builtins.formatting.cmake_format,
+			null_ls.builtins.formatting.prettier,
+			-- null_ls.builtins.formatting.prettier.with({
+			-- 	filetypes = { "js", "jsx", "ts", "tsx", "html", "json", "yaml", "markdown", "vue" },
+			-- }),
 			--null_ls.builtins.diagnostics.eslint,
 			--null_ls.builtins.completion.spell,
 			-- null_ls.builtins.formatting.fourmolu,
