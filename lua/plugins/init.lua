@@ -4,19 +4,19 @@ local Plugin = {
 	{
 		"ellisonleao/gruvbox.nvim",
 		requires = "rktjmp/lush.nvim",
-		--config = function()
-		--  vim.cmd.set("background=dark")
-		--  vim.cmd.colorscheme("gruvbox")
-		--end
+		-- config = function()
+		--   vim.cmd.set("background=dark")
+		--   vim.cmd.colorscheme("gruvbox")
+		-- end
 	},
 
 	{
 		"sainnhe/gruvbox-material",
 		requires = "rktjmp/lush.nvim",
-		--config = function()
-		--	vim.cmd.set("background=dark")
-		--	vim.cmd.colorscheme("gruvbox-material")
-		--end,
+		config = function()
+			vim.cmd.set("background=dark")
+			vim.cmd.colorscheme("gruvbox-material")
+		end,
 	},
 
 	{
@@ -31,7 +31,7 @@ local Plugin = {
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		opts = {}, -- this is equalent to setup({}) function
-	}, 
+	},
 }
 
 return Plugin
